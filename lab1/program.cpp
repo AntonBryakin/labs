@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 int main() {
+    srand(time(NULL));
 
     int max_a, min_a;
     int a[10]; 
