@@ -4,31 +4,30 @@
 int main() {
     srand(time(NULL));
 
-    int size;
-    printf("Введите размер массива: ");
-    scanf("%d", &size);
     int max_a, min_a;
-    int *a;
-    a = (int*)malloc(size * sizeof(int));
+    int summ = 0;
+    int a[5][5];
 
-
-    printf("\nМассив: ");
-    for (int i = 0; i < size; i++)
+    printf("\nМассив: \n");
+    for (int i = 0; i < 5; i++)
     {   
-        a[i] = rand()%100;
-        if (i == 0) min_a = max_a = a[i];
-        
-        if (a[i] > max_a) {
-            max_a = a[i];
-        };
-        if (a[i] < min_a) {
-            min_a = a[i];
-        };
-
-        printf("%d ",a[i]);
+        for (int j = 0; j < 5; j++)
+        {
+            a[i][j] = rand()%100;
+            printf("%d ", a[i][j]);
+        }
+        printf("\n");
     };
-    free(a);
-    printf("\nМаксимальное число в массиве: %d\nМинимальное число в массиве: %d", max_a,min_a);
+    printf("\n");
+    for (int i = 0; i < 5; i++)
+    {   
+        for (int j = 0; j < 5; j++)
+        {
+            summ = summ + a[i][j];
+        }
+        printf("Сумма %d строки: %d\n", i+1, summ);
+        summ = 0;
+    };
 
     return 0;
 }
