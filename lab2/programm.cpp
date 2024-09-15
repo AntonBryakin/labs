@@ -1,4 +1,3 @@
-#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -20,48 +19,136 @@ void shell(int *items, int count) {
     }
 }
 
+void qs(int *items, int left, int right) //вызов функции: qs(items, 0, count-1);
+{
+  int i, j;
+  int x, y;
+
+  i = left; j = right;
+
+  /* выбор компаранда */
+  x = items[(left+right)/2];
+  
+  do {
+    while((items[i] < x) && (i < right)) i++;
+    while((x < items[j]) && (j > left)) j--;
+
+    if(i <= j) {
+      y = items[i];
+      items[i] = items[j];
+      items[j] = y;
+      i++; j--;
+    }
+  } while(i <= j);
+
+  if(left < j) qs(items, left, j);
+  if(i < right) qs(items, i, right);
+}
+
+// typedef mytype int[200];
+
+void arr_rand(int *arr) {
+    srand(time(NULL));
+    for (int i = 0; i < 100000; i++)
+    {
+        arr[i] = rand()%100000+1;
+    }
+}
+void arr_up(int *arr) {
+    srand(time(NULL));
+    for (int i = 0; i < 100000; i++)
+    {
+        arr[i] = i;
+    }
+}
+void arr_down(int *arr) {
+    srand(time(NULL));
+    for (int i = 0; i < 100000; i++)
+    {
+        arr[i] = 100000 - i;
+    }
+}
+void arr_upDown(int *arr) {
+    srand(time(NULL));
+    for (int i = 0; i < 100000; i++)
+    {
+        if (i<50000)
+            arr[i] = i;
+        else 
+            arr[i] = 100000-i;
+    }
+}
+
+void view_arr(int *arr){
+    for (int i = 0; i < 10; i++)
+    {
+        printf("%d ",arr[i]);
+    }
+    printf("\n");
+}
+
 int main(void)
 {
+    int a[100000];
+
 	setvbuf(stdin, NULL, _IONBF, 0);
 	setvbuf(stdout, NULL, _IONBF, 0);
 
-    int arr_rand[200];
-    srand(time(NULL));
-    for (int i = 0; i < 200; i++)
-    {
-        arr_rand[i] = rand()%200+1;
-    }
-    
-    int arr_up[200];
-    srand(time(NULL));
-    for (int i = 0; i < 200; i++)
-    {
-        arr_up[i] = i;
-    }
-    
-    int arr_down[200];
-    srand(time(NULL));
-    for (int i = 0; i < 200; i++)
-    {
-        arr_up[i] = 200 - i;
-    }
+    int starttime = clock();
+    arr_rand(a); //сортировка шелла на рандомном массиве
+    shell(a,100000);
+    // view_arr(a);
+    float diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения сортировки Шелла на рандомном массиве равно: %f сек.\n", diff);
 
-    int arr_upDown[200];
-    srand(time(NULL));
-    for (int i = 0; i < 200; i++)
-    {
-        if (i<100)
-            arr_upDown[i] = i;
-        else 
-            arr_upDown[i] = 200-i;
-    }
+    starttime = clock();
+    arr_up(a);//сортировка шелла на возрастающем массиве
+    shell(a,100000);
+    // view_arr(a);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения сортировки Шелла на возрастающем массиве равно: %f сек.\n", diff);
 
-    shell(arr_rand,200);
+    starttime = clock();
+    arr_down(a);//сортировка шелла на убывающем массиве
+    shell(a,100000);
+    // view_arr(a);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения сортировки Шелла на убывающем массиве равно: %f сек.\n", diff);
 
-    for (int i = 0; i < 10; i++)
-    {
-        printf("%d ",arr_rand[i]);
-    }
-    
+    starttime = clock();
+    arr_upDown(a);//сортировка шелла на возрастающем и убывающем массиве
+    shell(a,100000);
+    // view_arr(a);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения сортировки Шелла на возрастающем и убывающем равно: %f сек.\n", diff);
+
+    starttime = clock();
+    arr_rand(a); //сортировка шелла на рандомном массиве
+    qs(a,0,99999);
+    // view_arr(a);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения быстрой сортировки на рандомном массиве равно: %f сек.\n", diff);
+
+    starttime = clock();
+    arr_up(a);//сортировка шелла на возрастающем массиве
+    qs(a,0,99999);
+    // view_arr(a);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения быстрой сортировки на возрастающем массиве равно: %f сек.\n", diff);
+
+    starttime = clock();
+    arr_down(a);//сортировка шелла на убывающем массиве
+    qs(a,0,99999);
+    // view_arr(a);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения быстрой сортировки на убывающем массиве равно: %f сек.\n", diff);
+
+    starttime = clock();
+    arr_upDown(a);//сортировка шелла на возрастающем и убывающем массиве
+    qs(a,0,99999);
+    // view_arr(a);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения быстрой сортировки на возрастающем и убывающем равно: %f сек.\n", diff);
+
 	return(0);
 }
