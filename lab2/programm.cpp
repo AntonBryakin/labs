@@ -45,8 +45,6 @@ void qs(int *items, int left, int right) //вызов функции: qs(items, 
   if(i < right) qs(items, i, right);
 }
 
-// typedef mytype int[200];
-
 void arr_rand(int *arr) {
     srand(time(NULL));
     for (int i = 0; i < 100000; i++)
@@ -84,7 +82,7 @@ void view_arr(int *arr){
     {
         printf("%d ",arr[i]);
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 int main(void)
@@ -97,58 +95,86 @@ int main(void)
     int starttime = clock();
     arr_rand(a); //сортировка шелла на рандомном массиве
     shell(a,100000);
-    // view_arr(a);
     float diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
     printf("Время выполнения сортировки Шелла на рандомном массиве равно: %f сек.\n", diff);
+    view_arr(a);
 
     starttime = clock();
     arr_up(a);//сортировка шелла на возрастающем массиве
     shell(a,100000);
-    // view_arr(a);
     diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
     printf("Время выполнения сортировки Шелла на возрастающем массиве равно: %f сек.\n", diff);
+    view_arr(a);
 
     starttime = clock();
     arr_down(a);//сортировка шелла на убывающем массиве
     shell(a,100000);
-    // view_arr(a);
     diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
     printf("Время выполнения сортировки Шелла на убывающем массиве равно: %f сек.\n", diff);
+    view_arr(a);
 
     starttime = clock();
     arr_upDown(a);//сортировка шелла на возрастающем и убывающем массиве
     shell(a,100000);
-    // view_arr(a);
     diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
     printf("Время выполнения сортировки Шелла на возрастающем и убывающем равно: %f сек.\n", diff);
+    view_arr(a);
 
     starttime = clock();
-    arr_rand(a); //быстрая сортировка на рандомном массиве
+    arr_rand(a); //данная быстрая сортировка на рандомном массиве
     qs(a,0,99999);
-    // view_arr(a);
     diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
     printf("Время выполнения быстрой сортировки на рандомном массиве равно: %f сек.\n", diff);
+    view_arr(a);
 
     starttime = clock();
-    arr_up(a);//быстрая сортировка на возрастающем массиве
+    arr_up(a);//данная быстрая сортировка на возрастающем массиве
     qs(a,0,99999);
-    // view_arr(a);
     diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
     printf("Время выполнения быстрой сортировки на возрастающем массиве равно: %f сек.\n", diff);
+    view_arr(a);
 
     starttime = clock();
-    arr_down(a);//быстрая сортировка на убывающем массиве
+    arr_down(a);//данная быстрая сортировка на убывающем массиве
     qs(a,0,99999);
-    // view_arr(a);
     diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
     printf("Время выполнения быстрой сортировки на убывающем массиве равно: %f сек.\n", diff);
+    view_arr(a);
+
+    // starttime = clock();
+    // arr_upDown(a);//данная быстрая сортировка на возрастающем и убывающем массиве
+    // qs(a,0,99999);
+    // diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    // printf("Время выполнения быстрой сортировки на возрастающем и убывающем равно: %f сек.\n", diff);
+    // view_arr(a);
 
     starttime = clock();
-    arr_upDown(a);//быстрая сортировка на возрастающем и убывающем массиве
-    qs(a,0,99999);
-    // view_arr(a);
+    arr_rand(a); //данная быстрая сортировка на рандомном массиве
+    qsort(a,100000,sizeof(int),NULL);
     diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
-    printf("Время выполнения быстрой сортировки на возрастающем и убывающем равно: %f сек.\n", diff);
+    printf("Время выполнения встроенной быстрой сортировки на рандомном массиве равно: %f сек.\n", diff);
+    view_arr(a);
+
+    starttime = clock();
+    arr_up(a);//данная быстрая сортировка на возрастающем массиве
+    qsort(a,100000,sizeof(int),NULL);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения встроенной быстрой сортировки на возрастающем массиве равно: %f сек.\n", diff);
+    view_arr(a);
+
+    starttime = clock();
+    arr_down(a);//данная быстрая сортировка на убывающем массиве
+    qsort(a,100000,sizeof(int),NULL);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения встроенной быстрой сортировки на убывающем массиве равно: %f сек.\n", diff);
+    view_arr(a);
+
+    starttime = clock();
+    arr_upDown(a);//данная быстрая сортировка на возрастающем и убывающем массиве
+    qsort(a,100000,sizeof(int),NULL);
+    diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+    printf("Время выполнения встроенной быстрой сортировки на возрастающем и убывающем равно: %f сек.\n", diff);
+    view_arr(a);
 
 	return(0);
 }
