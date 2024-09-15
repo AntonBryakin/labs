@@ -10,10 +10,15 @@ int main(void)
 
 	clock_t start, end; // объявляем переменные для определения времени выполнения
 
-	int i=0, j=0, r, size;
+	int i=0, j=0, r, yk=0, size=0;
 
-    for (size = 100; size <= 10000; size = size+100)
+    int num[] = {100,200,400,1000,2000,4000};
+
+    while (size != 4000)
     {
+        size = num[yk];
+        yk++;
+
 	    int **a, **b, **c, elem_c;
         
         a = (int**)malloc(size * sizeof(int*));
@@ -27,7 +32,6 @@ int main(void)
             c[i] = (int*)malloc(size * sizeof(int));
         }
 
-        int starttime = clock();
         srand(time(NULL)); // инициализируем параметры генератора случайных чисел
         while(i<size)
         {
@@ -42,6 +46,7 @@ int main(void)
         srand(time(NULL)); // инициализируем параметры генератора случайных чисел
         i=0; j=0;
 
+        int starttime = clock();
         for(i=0;i<size;i++)
         {
             for(j=0;j<size;j++)
@@ -54,8 +59,8 @@ int main(void)
                 }
             }
         }
-
         float diff = ((clock()) - starttime)/float(CLOCKS_PER_SEC);
+
         printf("При размере матрицы %d на %d, время выполнения: %f\n", size, size, diff);
         free(a);
         free(b);
