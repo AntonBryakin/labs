@@ -26,8 +26,8 @@ struct node *get_struct(void)
 
 	printf("Введите данные: \n");   // вводим данные
 	scanf("%s", s);
-    printf("Введите приоритет: \n");   // вводим данные
-	scanf("%d", pr);
+    printf("Введите приоритет: \n");   // вводим приоритет
+	scanf("%d", &pr);
 	if ((*s == 0))
 	{
 		printf("Запись не была произведена\n");
@@ -49,20 +49,28 @@ void spstore(void)
 		head = p;
 		last = p;
 	}
-	else if (head != NULL && p != NULL) // список уже есть, то вставляем в конец
+	else if (head != NULL && p != NULL) // список уже есть
 	{
         struct node *temp = head;
         struct node *prev = NULL;
-		while (temp->pr > p->pr) {
-            prev = temp;
-            temp = temp->next;
+		while ((temp->pr >= p->pr) and (temp->next != NULL)) {
+			prev = temp;
+			temp = temp->next;
         }
         if (prev != NULL) {
-            prev->next = p;
-            p->next = temp;
+			if (temp->next != NULL) {
+				prev->next = p;
+				p->next = temp;
+			} else {
+				temp->next = p;
+			}
         } else {
-            p->next = temp;
-            head = p;
+			if (temp->pr != p->pr){
+            	p->next = temp;
+            	head = p;
+			} else {
+				temp->next = p;
+			}
         }
 	}
 	return;
@@ -172,6 +180,7 @@ int main(void) {
         scanf("%d",&state);
         switch (state){
         case 1:
+            printf("\n");
             spstore();
             printf("\n");
             review(head);
