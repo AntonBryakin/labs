@@ -9,12 +9,14 @@ struct node
 {
 	char inf[256];  // полезная информация
 	struct node *next; // ссылка на следующий элемент 
+    int pr; //приоритет в очереди
 };
 
 struct node *get_struct(void)
 {
 	struct node *p = NULL;
 	char s[256];
+    int pr;
 
 	if ((p = (node*)malloc(sizeof(struct node))) == NULL)  // выделяем память под новый элемент списка
 	{
@@ -24,13 +26,15 @@ struct node *get_struct(void)
 
 	printf("Введите данные: \n");   // вводим данные
 	scanf("%s", s);
-	if (*s == 0)
+    printf("Введите приоритет: \n");   // вводим данные
+	scanf("%d", pr);
+	if ((*s == 0))
 	{
 		printf("Запись не была произведена\n");
 		return NULL;
 	}
 	strcpy(p->inf, s);
-
+    p->pr = pr;
 	p->next = NULL;
 
 	return p;		// возвращаем указатель на созданный элемент
@@ -47,8 +51,19 @@ void spstore(void)
 	}
 	else if (head != NULL && p != NULL) // список уже есть, то вставляем в конец
 	{
-		last->next = p;
-		last = p;
+        struct node *temp = head;
+        struct node *prev = NULL;
+		while (temp->pr > p->pr) {
+            prev = temp;
+            temp = temp->next;
+        }
+        if (prev != NULL) {
+            prev->next = p;
+            p->next = temp;
+        } else {
+            p->next = temp;
+            head = p;
+        }
 	}
 	return;
 }
@@ -62,7 +77,7 @@ void review(struct node *first)
 	}
 	while (struc)
 	{
-		printf("%s -> ", struc->inf);
+		printf("%s:%d -> ", struc->inf,struc->pr);
 		struc = struc->next;
 	}
 	return;
@@ -152,34 +167,23 @@ int main(void) {
 
     while(exitApp!=true) {
         int state = 0;
-        printf("1: добавить элемент\n2: удалить элемент\n3: найти элемент\n4: отобразить очередь\n5: выйти");
+        printf("1: добавить элемент\n2: обработать первый элемент\n3: выйти");
         printf("\nВыберите действие: ");
         scanf("%d",&state);
         switch (state){
         case 1:
             spstore();
             printf("\n");
+            review(head);
+            printf("\n\n");
             break;
         case 2:
-            char delData[256];
-            printf("Введите значение удаляемого элемента: ");
-            scanf("%s", &delData);
-            del(delData);
-            printf("\n");
-            break;
-        case 3:
-            char findData[256];
-            printf("Введите данные элемента для его поиска: ");
-            scanf("%s", &findData);
-            find(findData);
-            printf("\n");
-            break;
-        case 4:
+            del(head->inf);
             printf("\n");
             review(head);
             printf("\n\n");
             break;
-        case 5:
+        case 3:
             exitApp = true;
             break;
         default:
