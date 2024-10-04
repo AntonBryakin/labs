@@ -48,10 +48,8 @@ void spstore(void)
 	{
 		struct node *temp;
 		temp = head;
-        while (temp->next != NULL) {
-			temp = temp->next;
-		}
-		temp->next = p;
+		p->next = temp;
+		head = p;
 	}
 	return;
 }
