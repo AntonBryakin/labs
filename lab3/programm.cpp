@@ -65,7 +65,7 @@ void spstore(void)
 				temp->next = p;
 			}
         } else {
-			if (temp->pr != p->pr){
+			if (temp->pr < p->pr){
             	p->next = temp;
             	head = p;
 			} else {
@@ -175,7 +175,7 @@ int main(void) {
 
     while(exitApp!=true) {
         int state = 0;
-        printf("1: добавить элемент\n2: обработать первый элемент\n3: выйти");
+        printf("1: добавить элемент\n2: удалить элемент\n3: выйти");
         printf("\nВыберите действие: ");
         scanf("%d",&state);
         switch (state){
@@ -187,7 +187,10 @@ int main(void) {
             printf("\n\n");
             break;
         case 2:
-            del(head->inf);
+			char n[256];
+			printf("\nВведите данные удаляемого элемента: ");
+			scanf("%s",n);
+            del(n);
             printf("\n");
             review(head);
             printf("\n\n");
