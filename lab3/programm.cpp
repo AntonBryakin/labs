@@ -9,14 +9,12 @@ struct node
 {
 	char inf[256];  // полезная информация
 	struct node *next; // ссылка на следующий элемент 
-    int pr; //приоритет в очереди
 };
 
 struct node *get_struct(void)
 {
 	struct node *p = NULL;
 	char s[256];
-    int pr;
 
 	if ((p = (node*)malloc(sizeof(struct node))) == NULL)  // выделяем память под новый элемент списка
 	{
@@ -26,15 +24,12 @@ struct node *get_struct(void)
 
 	printf("Введите данные: \n");   // вводим данные
 	scanf("%s", s);
-    printf("Введите приоритет: \n");   // вводим приоритет
-	scanf("%d", &pr);
 	if ((*s == 0))
 	{
 		printf("Запись не была произведена\n");
 		return NULL;
 	}
 	strcpy(p->inf, s);
-    p->pr = pr;
 	p->next = NULL;
 
 	return p;		// возвращаем указатель на созданный элемент
@@ -51,32 +46,12 @@ void spstore(void)
 	}
 	else if (head != NULL && p != NULL) // список уже есть
 	{
-        struct node *temp = head;
-        struct node *prev = NULL;
-		while ((temp->pr >= p->pr) and (temp->next != NULL)) {
-			prev = temp;
+		struct node *temp;
+		temp = head;
+        while (temp->next != NULL) {
 			temp = temp->next;
-        }
-        if (prev != NULL) {
-			if (temp->next != NULL) {
-				prev->next = p;
-				p->next = temp;
-			} else {
-				if (temp->pr < p->pr){
-					prev->next = p;
-					p->next = temp;	
-				} else {
-					temp->next = p;
-				}
-			}
-        } else {
-			if (temp->pr < p->pr){
-            	p->next = temp;
-            	head = p;
-			} else {
-				temp->next = p;
-			}
-        }
+		}
+		temp->next = p;
 	}
 	return;
 }
@@ -90,7 +65,7 @@ void review(struct node *first)
 	}
 	while (struc)
 	{
-		printf("%s:%d -> ", struc->inf,struc->pr);
+		printf("%s -> ", struc->inf);
 		struc = struc->next;
 	}
 	return;
@@ -192,10 +167,7 @@ int main(void) {
             printf("\n\n");
             break;
         case 2:
-			char n[256];
-			printf("\nВведите данные удаляемого элемента: ");
-			scanf("%s",n);
-            del(n);
+            del(head->inf);
             printf("\n");
             review(head);
             printf("\n\n");
