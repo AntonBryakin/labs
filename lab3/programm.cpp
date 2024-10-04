@@ -62,7 +62,12 @@ void spstore(void)
 				prev->next = p;
 				p->next = temp;
 			} else {
-				temp->next = p;
+				if (temp->pr < p->pr){
+					prev->next = p;
+					p->next = temp;	
+				} else {
+					temp->next = p;
+				}
 			}
         } else {
 			if (temp->pr < p->pr){
