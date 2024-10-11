@@ -9,7 +9,7 @@ struct Node {
     struct Node *left;
 };
 
-struct Node *root = NULL;
+struct Node *root;
 
 struct Node *CreateTree(struct Node *root, struct Node *r, int data) {
 	if (r == NULL) {
@@ -41,18 +41,20 @@ struct Node *find (struct Node *root, int data) {
     
     if (root->data == data) return root;
 
-    if (root->data > data && root->right != NULL) find(root->right, data);
-    else if (root->left != NULL) find(root->left, data);
-    else return NULL;
+    if (root->data > data && root->right != NULL) root = find(root->right, data);
+    else if (root->left != NULL) root = find(root->left, data);
+
+    return root;
 }
 
-int count (struct Node *root, int data, int cnt) {
+int count(struct Node *root, int data, int cnt) {
     
     if (root->data == data) cnt++;
 
     if (root->data >= data && root->right != NULL) cnt = count(root->right, data, cnt);
     else if (root->left != NULL) cnt = count(root->left, data, cnt);
-    else return cnt;
+
+    return cnt;
 }
 
 void print_tree(struct Node *r, int l)
@@ -71,13 +73,14 @@ void print_tree(struct Node *r, int l)
 }
 
 int main() {
-	
+
     bool exitApp = false;
+    root = NULL;
 
     while(exitApp!=true) {
         int state = 0;
         int D;
-        printf("1: добавить элемент\n2: найти элемент\n3: нарисовать текущее дерево\n4: выйти");
+        printf("1: добавить элемент\n2: найти элемент\n3: нарисовать текущее дерево\n4: посчитать повторение элементов\n5: выйти");
         printf("\nВыберите действие: ");
         scanf("%d",&state);
         switch (state){
@@ -87,29 +90,46 @@ int main() {
 		    scanf_s("%d", &D);
             printf("\n");
             root = CreateTree(root, root, D);
-            printf("\n\n");
-            break;
-        case 2:
-			char n[256];
-			printf("\nВведите данные искомого элемента: ");
-			scanf("%s",n);
-            int r = 0;
-            r = find(root,D)->data;
             printf("\n");
-            if (r != 0) printf("Элемент %d найден", &r);
+            break;
+        case 2: {
+            struct Node *r = NULL;
+            int r_data;
+			printf("\nВведите данные искомого элемента: ");
+            scanf("%d",&r_data);
+            // printf("%d",r_data);
+            r = find(root, r_data);
+            printf("\n");
+            if (r != NULL) printf("Элемент %d найден", r->data);
             else printf("Элемент не найден");
             printf("\n\n");
             break;
+        }
         case 3:
+            printf("\n");
             print_tree(root,0);
+            printf("\n");
             break;
-        case 4:
+        case 4: {
+            int cnt_r = 0;
+            int r_data;
+			printf("\nВведите данные искомого элемента: ");
+            scanf("%d",&r_data);
+            printf("%d",r_data);
+            cnt_r = count(root, r_data, 0);
+            printf("\n");
+            if (cnt_r != 0) printf("Найдено %d элемента", cnt_r);
+            else printf("Элемент не найден");
+            printf("\n\n");
+            break;
+        }
+        case 5:
             exitApp = true;
             break;
         default:
             printf("Введена неверная команда\n\n");
             break;
-        }
+        };
     };
 
 return 0;
