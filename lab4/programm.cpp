@@ -29,7 +29,11 @@ struct Node *CreateTree(struct Node *root, struct Node *r, int data) {
 		return r;
 	}
 
-	if (data > r->data)
+	if (data == r->data){
+        printf("Такой элемент уже создан");
+		exit(0);
+    }
+    else if (data > r->data)
 		CreateTree(r, r->left, data);
     else
 		CreateTree(r, r->right, data);
@@ -84,20 +88,23 @@ int main() {
         printf("\nВыберите действие: ");
         scanf("%d",&state);
         switch (state){
-        case 1:
+        case 1: {
+            struct Node *r = NULL;
+            int r_data;
             printf("\n");
             printf("Введите число: ");
 		    scanf_s("%d", &D);
+            r = find(root, r_data);
             printf("\n");
             root = CreateTree(root, root, D);
             printf("\n");
             break;
+        }
         case 2: {
             struct Node *r = NULL;
             int r_data;
 			printf("\nВведите данные искомого элемента: ");
             scanf("%d",&r_data);
-            // printf("%d",r_data);
             r = find(root, r_data);
             printf("\n");
             if (r != NULL) printf("Элемент %d найден", r->data);
