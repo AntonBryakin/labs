@@ -96,6 +96,56 @@ int **rasV(int **G, int size, int v) {
     return Gtemp;
 }
 
+int **sumG(int **G1, int **G2, int maxSize, int minSize) {
+    int **Gtemp = createG(maxSize);
+
+    for (int i=0; i<maxSize; i++){
+        for (int j=0; j<maxSize; j++){
+            Gtemp[i][j] = G1[i][j];
+        }
+    }
+
+    for (int i=0; i<minSize; i++){
+        for (int j=0; j<minSize; j++){
+            if (G2[i][j] == 1) Gtemp[i][j] = 1;
+        }
+    }
+
+    return Gtemp;
+}
+
+int **mltplG(int **G1, int **G2, int maxSize, int minSize) {
+    int **Gtemp = createG(minSize);
+
+    for (int i=0; i<minSize; i++){
+        for (int j=0; j<minSize; j++){
+            Gtemp[i][j] = G2[i][j];
+        }
+    }
+
+    for (int i=0; i<minSize; i++){
+        for (int j=0; j<minSize; j++){
+            Gtemp[i][j] = ((G1[i][j] == 1) and (G2[i][j] == 1))?1:0;
+        }
+    }
+
+    return Gtemp;
+}
+
+int **kolcSumG(int **G1, int **G2, int maxSize, int minSize) {
+    int **Gtemp = createG(minSize);
+
+    for(int i = minSize; i < maxSize; i++){
+        for(int j = minSize; i < maxSize; i++){
+            Gtemp[i-minSize][j-minSize] = G1[i][j];
+        }    
+    }
+
+    return Gtemp;
+
+}
+
+
 int main() {
     srand(time(NULL));
     
@@ -107,6 +157,8 @@ int main() {
 
     int **G1 = createG(nG1);
     int **G2 = createG(nG2);
+    // int **summG1 = createG(nG1);
+    // int **summG2 = createG(nG2);
 
 
     printf("Граф G1 \n");
@@ -117,7 +169,7 @@ int main() {
     printG(G2, nG2);
     printf("\n");
 
-
+    printf("Операция отождествления вершин над графом G1\n");
     printf("Введите номер первой вершины \n");
     scanf("%d", &v1);
     printf("Введите номер второй вершины \n");
@@ -130,6 +182,7 @@ int main() {
     printf("\n");
 
 
+    printf("Операция стягивания ребра над графом G2\n");
     printf("Введите номер первой вершины \n");
     scanf("%d", &v1);
     printf("Введите номер второй вершины \n");
@@ -147,6 +200,7 @@ int main() {
     printf("\n");
 
 
+    printf("Операция расщепления вершины графа G2\n");
     printf("Введите номер расщепляемой вершины \n");
     scanf("%d", &v1);
     
@@ -154,6 +208,75 @@ int main() {
     printf("Граф G2 \n");
     nG2++;
     printG(G2, nG2);
+
+    
+    printf("Операция объединения над графами G1 и G2\n");
+    printf("Граф G1 \n");
+    printG(G1, nG1);
+    printf("\n");
+
+    printf("Граф G2 \n");
+    printG(G2, nG2);
+    printf("\n");
+
+    if(nG1>nG2) {
+        int **summG = sumG(G1,G2,nG1,nG2);
+        printf("Суммирующий граф \n");
+        printG(summG, nG1);
+        printf("\n");    
+    }
+    else {
+        int **summG = sumG(G2,G1,nG2,nG1);
+        printf("Суммирующий граф \n");
+        printG(summG, nG2);
+        printf("\n");
+    }
+
+
+    printf("Операция пересечения над графами G1 и G2\n");
+    printf("Граф G1 \n");
+    printG(G1, nG1);
+    printf("\n");
+
+    printf("Граф G2 \n");
+    printG(G2, nG2);
+    printf("\n");
+
+    if(nG1>nG2) {
+        int **summG = mltplG(G1,G2,nG1,nG2);
+        printf("Результирующий граф\n");
+        printG(summG, nG2);
+        printf("\n");    
+    }
+    else {
+        int **summG = mltplG(G2,G1,nG2,nG1);
+        printf("Результирующий граф\n");
+        printG(summG, nG1);
+        printf("\n");
+    }
+
+
+    printf("Операция кольцевой суммы над графами G1 и G2\n");
+    printf("Граф G1 \n");
+    printG(G1, nG1);
+    printf("\n");
+
+    printf("Граф G2 \n");
+    printG(G2, nG2);
+    printf("\n");
+
+    if(nG1>nG2) {
+        int **summG = kolcSumG(G1,G2,nG1,nG2);
+        printf("Результирующий граф операции кольцевой суммы\n");
+        printG(summG, nG1-nG2);
+        printf("\n");    
+    }
+    else {
+        int **summG = kolcSumG(G2,G1,nG2,nG1);
+        printf("Результирующий граф операции кольцевой суммы\n");
+        printG(summG, nG2-nG1);
+        printf("\n");
+    }
 
     return 0;
 }
