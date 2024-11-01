@@ -2,12 +2,17 @@
 #include <random>
 #include <time.h>
 
+int factorial (int n){
+    return (n < 2) ? 1 : n * factorial (n - 1);
+}
+
 int main() {
     srand(time(NULL));
     int n, **G=NULL, sizeGraf = 0, countIzol = 0, countDom = 0, countEnd = 0;
 
     printf("Введите количество вершин графа:");
     scanf("%d",&n);
+
 
     G = (int **)malloc(n*sizeof(int*));
 
