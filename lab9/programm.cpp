@@ -67,7 +67,7 @@ int main() {
     for (int i=0;i<size;i++) {
         dist[i] = -1;
     }
-    BFSD(G,0,size,dist);
+    BFSD(G,v,size,dist);
     printf("\n\n");
     for (int i=0;i<size;i++) {
         printf("v: %d ",i);
