@@ -31,7 +31,7 @@ struct Node *CreateTree(struct Node *root, struct Node *r, int data) {
 
 	if (data == r->data){
         printf("Такой элемент уже создан");
-		exit(0);
+		return root;
     }
     else if (data > r->data)
 		CreateTree(r, r->left, data);
@@ -94,7 +94,6 @@ int main() {
             printf("\n");
             printf("Введите число: ");
 		    scanf_s("%d", &D);
-            r = find(root, r_data);
             printf("\n");
             root = CreateTree(root, root, D);
             printf("\n");
