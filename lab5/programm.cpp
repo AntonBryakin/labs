@@ -63,19 +63,19 @@ int main() {
 
     for (int i=0; i<n; i++){
         for (int j=0; j<m; j++){
-            GI[i][j] = 0;
+            GI[j][i] = 0;
         }
-    } 
+    }
 
     int num = 0;
     for (int i=0; i<n; i++){
         for (int j=i; j<n; j++){
             if (G[i][j]==1) {
                 if (i==j)
-                    GI[i][num] = 2;
+                    GI[num][i] = 2;
                 else {
-                    GI[i][num] = 1;
-                    GI[j][num] = 1;
+                    GI[num][i] = 1;
+                    GI[num][j] = 1;
                 }
                 num++;
             }
@@ -83,19 +83,18 @@ int main() {
     }
 
     sizeGraf = 0;
-    for (int i=0; i<m; i++){
-        int size = 0;
-        for (int j=0; j<n; j++){
-            if (GI[j][i]>0) size++; 
+    for (int i=0; i<n; i++){
+        for (int j=0; j<m; j++){
+            if (GI[j][i]>0) sizeGraf = sizeGraf + GI[j][i]; 
         }
-        if (size > 0) sizeGraf++;
     }
+    sizeGraf = sizeGraf/2;
 
     printf("\n");
 
     for (int i=0; i<n; i++){
         for (int j=0; j<m; j++){
-            printf("%d ",GI[i][j]);
+            printf("%d ",GI[j][i]);
         }
         printf("\n");
     }
@@ -105,13 +104,12 @@ int main() {
         int sizeStr = 0;
         bool petlya = false;
         for (int j = 0; j<m; j++){
-            if (GI[i][j] == 2) petlya == true;
-            if (GI[i][j] == 1) sizeStr = sizeStr + 1;
+            if (GI[j][i] == 2) petlya == true;
+            if (GI[j][i] == 1) sizeStr = sizeStr + 1;
         }
-        if (petlya) sizeStr = sizeStr-2;
         if (sizeStr == 0) printf("Вершина %d изолированная\n", i+1);
         if (sizeStr == 1) printf("Вершина %d концевая\n", i+1);
-        if (sizeStr >= n) printf("Вершина %d доминирующая\n", i+1);
+        if (sizeStr >= n-1) printf("Вершина %d доминирующая\n", i+1);
     }
 
     return 0;

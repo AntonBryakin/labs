@@ -2,6 +2,7 @@
 #include <random>
 #include <time.h>
 
+
 int **createG(int size) {
     int **G;
     G = (int **)malloc(size*sizeof(int *));
@@ -39,6 +40,7 @@ void DFS(int **G, int s,int size, int *vis){
 }
 
 int main() {
+    srand(time(NULL));
     int sizeG1;
     int Ivis;
     int **G1;
