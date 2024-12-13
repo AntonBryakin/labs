@@ -30,16 +30,6 @@ int printG(int **G ,int size) {
     return 0;
 }
 
-// void DFS(int **G, int s,int size, int *vis){
-//     vis[s] = 1;
-//     printf("%d ", s);
-//     for (int i=0; i<size; i++){
-//         if (G[s][i]==1 && vis[s]==0) {
-//             DFS(G, i, size, vis);
-//         }
-//     }
-// }
-
 void BFS(int **G, int s,int size, int *vis){
     queue<int> q;
     q.push(s);

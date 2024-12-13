@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <random>
 #include <time.h>
-
+#include <stack>
 
 int **createG(int size) {
     int **G;
@@ -30,12 +30,21 @@ int printG(int **G ,int size) {
 }
 
 void DFS(int **G, int s,int size, int *vis){
-    vis[s] = 1;
-    printf("%d ", s);
-    for (int i=0; i<size; i++){
-        if (G[s][i]==1 && vis[s]==0) {
-            DFS(G, i, size, vis);
+    std::stack<int> q;
+    q.push(s);
+    bool flag = true;
+    while (!q.empty()) {
+        if (flag) printf("%d ", q.top());
+        vis[q.top()] = 1;
+        for (int i=0; i<size; i++) {
+            flag = false;
+            if (G[q.top()][i]==1 && vis[i]==0) {
+                q.push(i);
+                flag = true;
+                break;
+            }
         }
+        if (!flag) q.pop();
     }
 }
 
@@ -50,13 +59,9 @@ int main() {
     G1 = createG(sizeG1);
     printG(G1, sizeG1);
     printf("\n");
-    for (Ivis=0;Ivis<=sizeG1;Ivis++) {
-        vis = (int*)malloc(sizeG1*sizeof(int));
-        for (int i=0; i<sizeG1; i++)
-            vis[i] = 0; 
-        if (vis[Ivis]==0){
-            DFS(G1,Ivis,sizeG1,vis);
-        }
-    }
+    vis = (int*)malloc(sizeG1*sizeof(int));
+    for (int i=0; i<sizeG1; i++)
+        vis[i] = 0;
+    DFS(G1,0,sizeG1,vis);
     return 0;
 }

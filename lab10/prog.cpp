@@ -4,34 +4,28 @@
 #include  <queue>
 using namespace std;
 
-int **createOG(int size) {
+int **createG(int sost, int size) {
     int **G;
     G = (int **)malloc(size*sizeof(int *));
     for (int i = 0; i < size; i++){
         G[i] = (int*)malloc(size*sizeof(int));
     }
-    for (int i=0; i<size; i++){
-        for (int j=i; j<size; j++){
-            G[i][j] = (rand()%2);
-            if (G[i][j]==1) G[i][j]=G[i][j]*rand()%30;
-            if (i == j) G[i][j] = 0;
-            G[j][i] = G[i][j];
-        }
-    }
-    return G;
-}
-
-int **createNG(int size) {
-    int **G;
-    G = (int **)malloc(size*sizeof(int *));
-    for (int i = 0; i < size; i++){
-        G[i] = (int*)malloc(size*sizeof(int));
-    }
-    for (int i=0; i<size; i++){
-        for (int j=0; j<size; j++){
-            G[i][j] = (rand()%2);
-            if (G[i][j]==1) G[i][j]=G[i][j]*rand()%30;
-            if (i == j) G[i][j] = 0;
+    if (sost == 0) {
+        for (int i=0; i<size; i++){
+            for (int j=i; j<size; j++){
+                G[i][j] = (rand()%2);
+                if (G[i][j]==1) G[i][j]=G[i][j]*rand()%30;
+                if (i == j) G[i][j] = 0;
+                G[j][i] = G[i][j];
+            }
+        }    
+    } else if (sost == 1) {
+        for (int i=0; i<size; i++){
+            for (int j=0; j<size; j++){
+                G[i][j] = (rand()%2);
+                if (G[i][j]==1) G[i][j]=G[i][j]*rand()%30;
+                if (i == j) G[i][j] = 0;
+            }
         }
     }
     return G;
@@ -68,18 +62,21 @@ void BFSD(int **G, int s,int size, int *dist){
 
 int main() {
     srand(time(NULL));
-    int *exOG;
-    int *exNG;
-    int D;
-    int R;
+    
+    
+    
+    // int *exOG;
+    // int *exNG;
+    // int D;
+    // int R;
     int sizeOG;
-    int sizeNG;
+    // int sizeNG;
     int **oG;
-    int **nG;
-    int **distMatrixOG;
-    int **distMatrixNG;
-    int *distOG = NULL;
-    int *distNG = NULL;
+    // int **nG;
+    // int **distMatrixOG;
+    // int **distMatrixNG;
+    // int *distOG = NULL;
+    // int *distNG = NULL;
     printf("Введите количество вершин ориентированного графа: ");
     scanf("%d", &sizeOG);
     oG = createOG(sizeOG);

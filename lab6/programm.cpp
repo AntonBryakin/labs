@@ -157,9 +157,6 @@ int main() {
 
     int **G1 = createG(nG1);
     int **G2 = createG(nG2);
-    // int **summG1 = createG(nG1);
-    // int **summG2 = createG(nG2);
-
 
     printf("Граф G1 \n");
     printG(G1, nG1);
