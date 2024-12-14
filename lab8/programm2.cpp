@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string.h>
+#include <time.h>
 
 using namespace std;
 
@@ -18,14 +19,13 @@ struct node *head = NULL, *last = NULL;
 
 struct node
 {
-	char inf[256];  // полезная информация
+	int inf;  // полезная информация
 	struct node *next; // ссылка на следующий элемент 
 };
 
-struct node *get_struct(void)
+struct node *get_node(int s)
 {
 	struct node *p = NULL;
-	char s[256];
 
 	if ((p = (node*)malloc(sizeof(struct node))) == NULL)  // выделяем память под новый элемент списка
 	{
@@ -33,23 +33,16 @@ struct node *get_struct(void)
 		exit(1);
 	}
 
-	printf("Введите данные: \n");   // вводим данные
-	scanf("%s", s);
-	if ((*s == 0))
-	{
-		printf("Запись не была произведена\n");
-		return NULL;
-	}
-	strcpy(p->inf, s);
+	p->inf = s;
 	p->next = NULL;
 
 	return p;		// возвращаем указатель на созданный элемент
 }
 
-void spstore(void)
+void spstore(int s)
 {
 	struct node *p = NULL;
-	p = get_struct();
+	p = get_node(s);
 	if (head == NULL && p != NULL)	// если списка нет, то устанавливаем голову списка
 	{
 		head = p;
@@ -63,43 +56,7 @@ void spstore(void)
 	return;
 }
 
-void review(struct node *first)
-{
-	struct node *struc = first;
-	if (head == NULL)
-	{
-		printf("Список пуст\n");
-	}
-	while (struc)
-	{
-		printf("%s -> ", struc->inf);
-		struc = struc->next;
-	}
-	return;
-}
-
-struct node *find(char *name)
-{
-	struct node *struc = head;
-	if (head == NULL)
-	{
-		printf("Список пуст\n");
-	}
-	while (struc)
-	{
-		if (strcmp(name, struc->inf) == 0)
-		{
-            printf("Такой элемент был найден\n");
-			return struc;
-		}
-		struc = struc->next;
-	}
-	printf("Элемент не найден\n");
-	return NULL;
-}
-
-
-void del(char *name)
+void del(int name)
 {
 	struct node *struc = head;// указатель, проходящий по списку установлен на начало списка
 	struct node *prev;// указатель на предшествующий удаляемому элемент
@@ -111,7 +68,7 @@ void del(char *name)
 		return;
 	}
 
-	if (strcmp(name, struc->inf) == 0)// если удаляемый элемент - первый
+	if (name == struc->inf)// если удаляемый элемент - первый
 	{
 		flag = 1;
 		head = struc->next;// установливаем голову на следующий элемент
@@ -126,7 +83,7 @@ void del(char *name)
 
 	while (struc) // проход по списку и поиск удаляемого элемента
 	{
-		if (strcmp(name, struc->inf) == 0) // если нашли, то
+		if (name == struc->inf) // если нашли, то
 		{
 			flag = 1;// выставляем индикатор
 			if (struc->next)// если найденный элемент не последний в списке
@@ -155,7 +112,6 @@ void del(char *name)
 		return;
 	}
 }
-
 
 
 //создает вершину, возвращает указатель на неё, принимает целое число - данные
@@ -271,9 +227,29 @@ void BFSS(struct Vertex *GS, int s,int size, int *vis){
 
 }
 
+void BFSH(int **G, int s,int size, int *vis){
+    spstore(s);
+    vis[s] = 1;
+
+    while (head != NULL){
+        s = head->inf;
+        printf("%d ", s);
+        del(head->inf);
+        for (int i=0; i<size; i++) {
+            if (G[s][i]==1 and vis[i]!=1) {
+                spstore(i);
+                vis[i]=1;
+            }
+        }
+    }
+    return;
+
+}
+
 //поиск в ширину для матрицы смежности
 void BFS(int **G, int s,int size, int *vis){
-    spstore(to_string(s));
+    queue<int> q;
+    q.push(s);
     vis[s] = 1;
 
     while (!q.empty()){
@@ -295,6 +271,7 @@ int main() {
     srand(time(NULL));
     int sizeG1,**G1,*vis = NULL; //объявление размера графа, двумерного массива, и вектора посещённых вершин
     struct Vertex *GS;
+    int beginTime, endTime;
 
     printf("Введите количество вершин графа: "); //спрашиваем пользователя про количество вершин
     scanf("%d", &sizeG1); //считываем введённые данные в переменную
@@ -304,15 +281,30 @@ int main() {
     printG(G1, sizeG1); //выводим матрицу смежности
     printf("-------------------\n"); //разделитель между выводом графа
     printGS(GS, sizeG1); //выводим списки смежности
-    
     printf("-------------------\n"); //разделитель между списком смежности и выводом результата обхода по матрице смежности
+    
+    printf("Обход по матрице смежности с помощью написаной очереди\n");
+    vis = (int*)malloc(sizeG1*sizeof(int)); //выделяем память под вектор посещённых вершин
+    beginTime = clock();
+    BFSH(G1,0,sizeG1,vis); //поиск в ширину в матрице смежности с помощью написаной очереди
+    endTime = clock();
+    printf("\nВремя выполнения: %f",(endTime-beginTime)/float(CLOCKS_PER_SEC));
+    printf("\n-------------------\n"); //разделитель между списком смежности и выводом результата обхода по матрице смежности
+    
     printf("Обход по матрице смежности\n");
     vis = (int*)malloc(sizeG1*sizeof(int)); //выделяем память под вектор посещённых вершин
+    beginTime = clock();
     BFS(G1,0,sizeG1,vis); //поиск в ширину в матрице смежности
+    endTime = clock();
+    printf("\nВремя выполнения: %f",(endTime-beginTime)/float(CLOCKS_PER_SEC));
+    printf("\n-------------------\n"); //разделитель между обходом по матрице и выводом результата обхода по спискам смежности
+
+    printf("Обход по спискам смежности\n");
+    beginTime = clock();
     for (int i=0; i<sizeG1; i++)
         vis[i] = 0; //заполняем вектор посещённых вершин нулями
-    printf("\n-------------------\n"); //разделитель между обходом по матрице и выводом результата обхода по спискам смежности
-    printf("Обход по спискам смежности\n");
     BFSS(GS,0,sizeG1,vis);//поиск в ширину для списков
+    endTime = clock();
+    printf("\nВремя выполнения: %f",(endTime-beginTime)/float(CLOCKS_PER_SEC));
     return 0;
 }
