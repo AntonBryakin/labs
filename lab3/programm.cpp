@@ -7,14 +7,13 @@ struct node *head = NULL, *last = NULL;
 
 struct node
 {
-	char inf[256];  // полезная информация
+	int inf;  // полезная информация
 	struct node *next; // ссылка на следующий элемент 
 };
 
-struct node *get_struct(void)
+struct node *get_struct(int s)
 {
 	struct node *p = NULL;
-	char s[256];
 
 	if ((p = (node*)malloc(sizeof(struct node))) == NULL)  // выделяем память под новый элемент списка
 	{
@@ -22,23 +21,23 @@ struct node *get_struct(void)
 		exit(1);
 	}
 
-	printf("Введите данные: \n");   // вводим данные
-	scanf("%s", s);
-	if ((*s == 0))
+	// // printf("Введите данные: \n");   // вводим данные
+	// scanf("%d",sInt,&s);
+	if (s == 0)
 	{
 		printf("Запись не была произведена\n");
 		return NULL;
 	}
-	strcpy(p->inf, s);
+	p->inf = s;
 	p->next = NULL;
 
 	return p;		// возвращаем указатель на созданный элемент
 }
 
-void spstore(void)
+void spstore(int s)
 {
 	struct node *p = NULL;
-	p = get_struct();
+	p = get_struct(s);
 	if (head == NULL && p != NULL)	// если списка нет, то устанавливаем голову списка
 	{
 		head = p;
@@ -46,10 +45,8 @@ void spstore(void)
 	}
 	else if (head != NULL && p != NULL) // список уже есть
 	{
-		struct node *temp;
-		temp = head;
-		p->next = temp;
-		head = p;
+		last->next = p;
+		last = p;
 	}
 	return;
 }
@@ -146,7 +143,6 @@ void del(char *name)
 		return;
 	}
 }
-
 
 int main(void) {
     bool exitApp = false;
