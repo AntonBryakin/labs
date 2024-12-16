@@ -224,9 +224,9 @@ void BFSS(struct Vertex *GS, int s,int size, int *vis){
         }
     }
     return;
-
 }
 
+//для  матрицы смежности, с помощью написанной вручную очереди
 void BFSH(int **G, int s,int size, int *vis){
     spstore(s);
     vis[s] = 1;

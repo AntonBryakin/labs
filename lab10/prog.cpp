@@ -49,8 +49,9 @@ void BFSD(int **G, int s,int size, int *dist){
     while (!q.empty()){
         s = q.front();
         q.pop();
+
         for (int i=0; i<size; i++) {
-            if (G[s][i]>0 and dist[i]==-1) {
+            if (G[s][i]>0 and dist[i]==INT_MAX) {
                 q.push(i);
                 dist[i]=dist[s]+G[s][i];
             }
@@ -60,117 +61,88 @@ void BFSD(int **G, int s,int size, int *dist){
 
 }
 
+int min_el(int *vec, int size){
+    int min_element = INT_MAX;
+    for (int i=0;i<size;i++){
+        if (min_element>vec[i]) min_element = vec[i];
+    }
+    return min_element;
+}
+
+int max_el(int *vec, int size){
+    int max_element = INT_MIN;
+    for (int i=0;i<size;i++){
+        if ((max_element<vec[i]) & (vec[i]!=INT_MAX)) max_element = vec[i];
+    }
+    return max_element;
+}
+
 int main() {
     srand(time(NULL));
-    
-    
-    
-    // int *exOG;
-    // int *exNG;
-    // int D;
-    // int R;
-    int sizeOG;
-    // int sizeNG;
-    int **oG;
-    // int **nG;
-    // int **distMatrixOG;
-    // int **distMatrixNG;
-    // int *distOG = NULL;
-    // int *distNG = NULL;
-    printf("Введите количество вершин ориентированного графа: ");
-    scanf("%d", &sizeOG);
-    oG = createOG(sizeOG);
-    printf("Введите количество вершин неориентированного графа: ");
-    scanf("%d", &sizeNG);
-    oG = createOG(sizeOG);
-    nG = createNG(sizeNG);
-    distMatrixOG = createOG(sizeOG);
-    distMatrixNG = createNG(sizeNG);
-    distOG = (int*)malloc(sizeOG*sizeof(int));
-    distNG = (int*)malloc(sizeNG*sizeof(int));
-    printf("Неориентированный граф: \n");
-    printG(oG, sizeOG);
-    printf("\n");
-    printf("Ориентированный граф: \n");
-    printG(nG, sizeNG);
-    printf("\n");
-    exOG = (int*)malloc(sizeOG*sizeof(int));
-    exNG = (int*)malloc(sizeNG*sizeof(int));
+    int **G, *dist, size, **GO, *excentrs;
 
-    
-    for (int i=0;i<sizeOG;i++) {
-        for (int k=0;k<sizeOG;k++) {
-            distOG[k] = -1;
+    printf("Введите количество вершин графа: ");//пользователь вводит размер
+    scanf("%d", &size);
+
+    G = createG(0,size);//генерируем НЕнаправленный граф
+    printf("Неориентированный граф:\n");
+    printG(G,size);
+    printf("------------------------------\nМатрица достижимости для неориентированного графа:\n");
+
+    dist = (int *)malloc(size*sizeof(int));//выделяем память под вектор расстояний
+    excentrs = (int *)malloc(size*sizeof(int));//выделяем память под вектор значений эксцентриситет
+
+    for (int k=0;k<size;k++){
+        for (int i=0;i<size;i++) { //каждый раз заполняем вектор dist
+            dist[i] = INT_MAX; //кладём в него максимальное значение
         }
-        BFSD(oG,i,sizeOG,distOG);
-        for (int j=0;j<sizeOG;j++) {
-            distMatrixOG[j][i] = distOG[j];
-        }    
-    }
-    printf("\n");
-    printf("Матрица расстояний для неориентированного графа: \n");
-    printG(distMatrixOG, sizeOG);
-    printf("\n");
-    for (int i=0;i<sizeOG;i++) {
-        int maxV = -2;
-        for (int j=0;j<sizeOG;j++) {
-            if (distMatrixOG[j][i]>maxV) maxV = distMatrixOG[j][i];
+        BFSD(G, k, size, dist); //производим поиск расстояний от каждой из вершин
+        excentrs[k] = max_el(dist,size); //ищем эксцентриситет вершины
+        for (int i=0;i<size;i++) { //вывод вектора с расстояниями от вершины
+            if (dist[i]==INT_MAX) printf("oo ");
+            else printf("%d ", dist[i]);
         }
-        exOG[i] = maxV;
-        printf("%d ", exOG[i]);
+        printf("\n");
     }
-    printf("\n");
-    R = 120;
-    D = -2;
-    for (int i=0;i<sizeOG;i++) {
-        if (exOG[i]<R and exOG[i]!=0) R = exOG[i];
-        if (exOG[i]>D and exOG[i]!=0) D = exOG[i];
+    printf("------------------------------\n");
+    int diametr = max_el(excentrs,size);
+    int radius = min_el(excentrs,size);
+    printf("Диаметр графа равен: %d\n", diametr);
+    printf("Радиус графа равен: %d\n", radius);
+    printf("------------------------------\n");
+    for(int i=0;i<size;i++){
+        if (excentrs[i]==diametr) printf("Вершина %d переферийная.\n", i);
+        if (excentrs[i]==radius) printf("Вершина %d центральная.\n", i);
     }
-    printf("Радиус неориентированного графа: %d\n",R);
-    printf("Диаметр неориентированного графа: %d\n",D);
-    for (int i=0;i<sizeOG;i++) {
-        if (exOG[i]==R) printf("Вершина %d является центральной.\n",i);
-        if (exOG[i]==D) printf("Вершина %d является периферийной.\n",i);
-    }
-    printf("\n");
+    printf("------------------------------\n");
+
+    GO = createG(1,size);//генерируем направленный граф
+    printf("Ориентированный граф:\n");
+    printG(GO,size);
+    printf("------------------------------\nМатрица достижимости для ориентированного графа:\n");
 
 
-
-    for (int i=0;i<sizeNG;i++) {
-        for (int k=0;k<sizeNG;k++) {
-            distNG[k] = -1;
+    for (int k=0;k<size;k++){
+        for (int i=0;i<size;i++) { //каждый раз заполняем вектор dist
+            dist[i] = INT_MAX; //кладём в него максимальное значение
         }
-        BFSD(nG,i,sizeNG,distNG);
-        for (int j=0;j<sizeNG;j++) {
-            distMatrixNG[j][i] = distNG[j];
-        }    
-    }
-    printf("\n");
-    printf("Матрица расстояний для ориентированного графа: \n");
-    printG(distMatrixNG, sizeNG);
-    printf("\n");
-    for (int i=0;i<sizeNG;i++) {
-        int maxV = -2;
-        for (int j=0;j<sizeNG;j++) {
-            if (distMatrixNG[i][j]>maxV) maxV = distMatrixNG[i][j];
+        BFSD(GO, k, size, dist); //производим поиск расстояний от каждой из вершин
+        excentrs[k] = max_el(dist,size); //ищем эксцентриситет вершины
+        for (int i=0;i<size;i++) { //вывод вектора с расстояниями от вершины
+            if (dist[i]==INT_MAX) printf("oo ");
+            else printf("%d ", dist[i]);
         }
-        exNG[i] = maxV;
-        printf("%d ",exNG[i]);
+        printf("\n");
     }
-    printf("\n");
-    R = 120;
-    D = -2;
-    for (int i=0;i<sizeNG;i++) {
-        if (exNG[i]<R and exNG[i]!=0) R = exNG[i];
-        if (exNG[i]>D and exNG[i]!=0) D = exNG[i];
+    printf("------------------------------\n");
+    diametr = max_el(excentrs,size);
+    radius = min_el(excentrs,size);
+    printf("Диаметр графа равен: %d\n", diametr);
+    printf("Радиус графа равен: %d\n", radius);
+    printf("------------------------------\n");
+    for(int i=0;i<size;i++){
+        if (excentrs[i]==diametr) printf("Вершина %d переферийная.\n", i);
+        if (excentrs[i]==radius) printf("Вершина %d центральная.\n", i);
     }
-    printf("Радиус ориентированного графа: %d\n",R);
-    printf("Диаметр ориентированного графа: %d\n",D);
-    for (int i=0;i<sizeNG;i++) {
-        if (exNG[i]==R) printf("Вершина %d является центральной.\n",i);
-        if (exNG[i]==D) printf("Вершина %d является периферийной.\n",i);
-    }
-    printf("\n");
-
     return 0;
 }

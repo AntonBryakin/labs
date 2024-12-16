@@ -118,17 +118,22 @@ void DFSС(int **G, int s,int size, int *vis){
     std::stack<int> q;
     q.push(s);
     bool flag = true;
+
     while (!q.empty()) {
+        
         if (flag) printf("%d ", q.top());
         vis[q.top()] = 1;
+        
         for (int i=0; i<size; i++) {
             flag = false;
+            
             if (G[q.top()][i]==1 && vis[i]==0) {
                 q.push(i);
                 flag = true;
                 break;
             }
         }
+        
         if (!flag) q.pop();
     }
 }
