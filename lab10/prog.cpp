@@ -10,6 +10,45 @@ int **createG(int sost, int size) {
     for (int i = 0; i < size; i++){
         G[i] = (int*)malloc(size*sizeof(int));
     }
+    switch (sost)
+    {
+    case 0: //взвешенный неориентированный
+        for (int i=0; i<size; i++){
+            for (int j=i; j<size; j++){
+                G[i][j] = (rand()%2);
+                if (G[i][j]==1) G[i][j]=G[i][j]*rand()%30;
+                if (i == j) G[i][j] = 0;
+                G[j][i] = G[i][j];
+            }
+        }
+        break;
+    case 1: //взвешенный ориентированный
+        for (int i=0; i<size; i++){
+            for (int j=0; j<size; j++){
+                G[i][j] = (rand()%2);
+                if (G[i][j]==1) G[i][j]=G[i][j]*rand()%30;
+                if (i == j) G[i][j] = 0;
+            }
+        }
+        break;
+    case 2: //невзвешенный неориентированный
+        for (int i=0; i<size; i++){
+            for (int j=0; j<size; j++){
+                G[i][j] = (rand()%2);
+                if (i == j) G[i][j] = 0;
+            }
+        }
+        break;
+    case 3: //невзвешенный ориентированный
+        for (int i=0; i<size; i++){
+            for (int j=0; j<size; j++){
+                G[i][j] = (rand()%2);
+            }
+        }
+        break;
+    default:
+        break;
+    }
     if (sost == 0) {
         for (int i=0; i<size; i++){
             for (int j=i; j<size; j++){
