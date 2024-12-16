@@ -2,6 +2,8 @@
 #include <random>
 #include <time.h>
 #include  <queue>
+#include <iostream>
+#include <locale.h>
 using namespace std;
 
 int **createG(int sost, int size) {
@@ -81,7 +83,6 @@ void BFSD(int **G, int s,int size, int *dist){
         }
     }
     return;
-
 }
 
 int min_el(int *vec, int size){
@@ -106,22 +107,22 @@ void printInformation(int **G,int size, int sost){
     switch (sost)
     {
     case 0:
-        printf("Взвешенный, неориентированный граф:\n");
+        printf("weighted undirected graph:\n");
         break;
     case 1:
-        printf("Взвешенный, ориентированный граф:\n");
+        printf("weighted directed graph:\n");
         break;
     case 2:
-        printf("Невзвешенный, ориентированный граф:\n");
+        printf("unweighted directed grap:\n");
         break;
     case 3:
-        printf("Невзвешенный, неориентированный граф:\n");
+        printf("unweighted undirected graph:\n");
         break;
     default:
         break;
     }
     printG(G,size);
-    printf("------------------------------\nМатрица достижимости для данного графа:\n");
+    printf("------------------------------\nMatrix of distance graph's:\n");
 
     dist = (int *)malloc(size*sizeof(int));//выделяем память под вектор расстояний
     excentrs = (int *)malloc(size*sizeof(int));//выделяем память под вектор значений эксцентриситет
@@ -141,25 +142,40 @@ void printInformation(int **G,int size, int sost){
     printf("------------------------------\n");
     int diametr = max_el(excentrs,size);
     int radius = min_el(excentrs,size);
-    printf("Диаметр графа равен: %d\n", diametr);
-    printf("Радиус графа равен: %d\n", radius);
+    printf("Diametr graph's: %d\n", diametr);
+    printf("Radius graph's: %d\n", radius);
     printf("------------------------------\n");
     for(int i=0;i<size;i++){
-        if (excentrs[i]==diametr) printf("Вершина %d переферийная.\n", i);
-        if (excentrs[i]==radius) printf("Вершина %d центральная.\n", i);
+        if (excentrs[i]==diametr) printf("Vertex %d is peripheral.\n", i);
+        if (excentrs[i]==radius) printf("Vertex %d is central.\n", i);
     }
     printf("------------------------------\n");
+    return;
 }
 
-int main() {
+int main(int argc, char *argv[]){
     srand(time(NULL));
+    setlocale(LC_ALL, "rus");
     int **G, *dist, size, **GO, *excentrs;
 
-    printf("Введите количество вершин графа: ");//пользователь вводит размер
+    int sost;
+    
+    if(argc > 1){
+        sost = atoi(argv[0]);
+    } else {
+        printf("Need arguments fo runing .exe:\n");
+        printf("0 - weighted undirected graph\n");
+        printf("1 - weighted directed graph\n");
+        printf("2 - unweighted directed graph\n");
+        printf("3 - unweighted undirected graph\n");
+        return 0;
+    }
+
+    printf("Input size graph: ");//пользователь вводит размер
     scanf("%d", &size);
 
-    G = createG(3, size);//генерируем НЕнаправленный граф
-    printInformation(G, size, 3);
-
+    G = createG(sost, size);//генерируем граф
+    printInformation(G, size, sost);
+    getchar();
     return 0;
 }

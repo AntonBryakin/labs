@@ -90,8 +90,10 @@ void BFSD(int **G, int s,int size, int *dist){
         q.pop();
 
         for (int i=0; i<size; i++) {
-            if (G[s][i]>0 and dist[i]==INT_MAX) {
+            if (G[s][i]>0 & dist[i]==INT_MAX) {
                 q.push(i);
+                dist[i]=dist[s]+G[s][i];
+            } else if (G[s][i]>0 & dist[i]>dist[s]+G[s][i]) {
                 dist[i]=dist[s]+G[s][i];
             }
         }

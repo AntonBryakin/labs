@@ -247,19 +247,19 @@ void BFSH(int **G, int s,int size, int *vis){
 }
 
 //поиск в ширину для матрицы смежности
-void BFS(int **G, int s,int size, int *vis){
+void BFS(int **G, int s,int size, int *depth){
     queue<int> q;
     q.push(s);
-    vis[s] = 1;
+    depth[s] = 0;
 
     while (!q.empty()){
         s = q.front();
         printf("%d ", s);
         q.pop();
         for (int i=0; i<size; i++) {
-            if (G[s][i]==1 and vis[i]!=1) {
+            if (G[s][i]==1 and depth[i]==-1) {
                 q.push(i);
-                vis[i]=1;
+                depth[i]=depth[s]+1;
             }
         }
     }
@@ -269,7 +269,7 @@ void BFS(int **G, int s,int size, int *vis){
 
 int main() {
     srand(time(NULL));
-    int sizeG1,**G1,*vis = NULL; //объявление размера графа, двумерного массива, и вектора посещённых вершин
+    int sizeG1,**G1,*vis = NULL, *depth; //объявление размера графа, двумерного массива, и вектора посещённых вершин
     struct Vertex *GS;
     int beginTime, endTime;
 
@@ -293,11 +293,25 @@ int main() {
     
     printf("Обход по матрице смежности\n");
     vis = (int*)malloc(sizeG1*sizeof(int)); //выделяем память под вектор посещённых вершин
+    depth = (int*)malloc(sizeG1*sizeof(int));
+    for (int i=0;i<sizeG1;i++){
+        depth[i]=-1;
+    }
     beginTime = clock();
-    BFS(G1,0,sizeG1,vis); //поиск в ширину в матрице смежности
+    BFS(G1,0,sizeG1,depth); //поиск в ширину в матрице смежности
     endTime = clock();
     printf("\nВремя выполнения: %f",(endTime-beginTime)/float(CLOCKS_PER_SEC));
     printf("\n-------------------\n"); //разделитель между обходом по матрице и выводом результата обхода по спискам смежности
+    int *levels = (int*)malloc(sizeG1*sizeof(int));
+    for (int i=0;i<sizeG1;i++) levels[i] = -1;
+    for (int lvl=0;lvl<sizeG1;lvl++) {
+        printf("На уровне %d находятся вершины: \n",lvl);
+        for (int i=0;i<sizeG1;i++){
+            if (depth[i]==lvl) printf("%d ",i);
+        }
+        printf("\n");
+    }
+    printf("-------------------\n");
 
     printf("Обход по спискам смежности\n");
     beginTime = clock();
